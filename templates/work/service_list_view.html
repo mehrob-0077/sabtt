@@ -1,4 +1,4 @@
-﻿{% extends 'work/base.html' %}
+﻿Ё{% extends 'work/base.html' %}
 
 {% block title %}Услуги — SABT{% endblock %}
 
@@ -12,7 +12,7 @@
     {% if request.user.is_staff %}<a class="work-button work-button--primary" href="{% url 'create_service_view' %}">Добавить услугу <span>↗</span></a>{% endif %}
 </section>
 
-<form method="get" class="work-form service-filters" role="search">
+<form method="get" action="{% url 'service_list_view' %}" class="work-form service-filters" role="search">
     <div class="work-form__field service-filters__search">
         <label for="service-search">Поиск услуг</label>
         <input id="service-search" type="search" name="q" value="{{ search }}" placeholder="Название или описание">
