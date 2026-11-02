@@ -1,0 +1,32 @@
+﻿{% extends 'auth/base.html' %}
+
+{% block title %}Личный кабинет — SABT{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+    <aside class="welcome-panel" aria-label="Ваши записи">
+        <div class="welcome-panel__top"><span class="welcome-mark">S</span><span>SABT <span class="brand-caption">· запись онлайн</span></span></div>
+        <div class="welcome-panel__copy"><p class="welcome-kicker">ЛИЧНЫЙ КАБИНЕТ</p><p class="welcome-quote">Ваши планы<br><em>под рукой.</em></p><p class="welcome-note">Управляйте записями и выбирайте новую услугу.</p></div>
+        <div class="booking-visual" aria-hidden="true"><div class="booking-visual__head"><span></span><span></span><span></span><b></b></div><div class="booking-visual__grid"><i></i><i></i><i></i><i></i><i class="is-selected"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="booking-visual__confirm"><span></span><span></span></div></div>
+        <div class="welcome-panel__bottom"><span>ВАШЕ ВРЕМЯ — ВАШ ВЫБОР</span></div>
+    </aside>
+    <section class="auth-card account-card" aria-labelledby="page-title">
+        <a class="brand" href="{% url 'service_list_view' %}"><span class="brand__icon" aria-hidden="true">S</span><span class="brand__name">SABT</span></a>
+        <p class="eyebrow">Личный кабинет</p>
+        <h1 id="page-title">Добро пожаловать!</h1>
+        <p class="auth-intro">Вы вошли как <strong>{{ request.user.email }}</strong>.</p>
+        <div class="account-stats">
+            <a href="{% url 'service_list_view' %}"><strong>{{ services_count }}</strong><span>услуг в каталоге</span></a>
+            <a href="{% url 'my_appointments_view' %}"><strong>{{ appointments_count }}</strong><span>ваших записей</span></a>
+        </div>
+        <h2 class="account-subtitle">Ближайшие записи</h2>
+        {% for appointment in upcoming_appointments %}
+            <a class="account-appointment" href="{% url 'appointment_detail_view' appointment.id %}"><span>{{ appointment.service.name }}</span><small>{{ appointment.date|date:'d.m.Y' }} · {{ appointment.time|time:'H:i' }}</small></a>
+        {% empty %}
+            <p class="account-empty">Пока нет запланированных визитов.</p>
+        {% endfor %}
+        <div class="account-links"><a href="{% url 'profile_view' %}">Профиль</a><a href="{% url 'change_password_view' %}">Сменить пароль</a></div>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button button--secondary" type="submit">Выйти из аккаунта</button></form>
+    </section>
+</div>
+{% endblock %}

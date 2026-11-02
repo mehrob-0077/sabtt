@@ -1,0 +1,35 @@
+﻿{% extends 'auth/base.html' %}
+
+{% block title %}Регистрация — SABT{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+    <aside class="welcome-panel" aria-label="Запись на услугу">
+        <div class="welcome-panel__top"><span class="welcome-mark">S</span><span>SABT <span class="brand-caption">· запись онлайн</span></span></div>
+        <div class="welcome-panel__copy"><p class="welcome-kicker">ВАШЕ ВРЕМЯ — ВАШ ВЫБОР</p><p class="welcome-quote">Запишитесь<br>на удобное<br><em>время.</em></p><p class="welcome-note">Выберите услугу и подходящий час — всё просто.</p></div>
+        <div class="booking-visual" aria-hidden="true"><div class="booking-visual__head"><span></span><span></span><span></span><b></b></div><div class="booking-visual__grid"><i></i><i></i><i></i><i></i><i class="is-selected"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="booking-visual__confirm"><span></span><span></span></div></div>
+        <div class="welcome-panel__bottom"><span>БЫСТРО · УДОБНО · ВАШ ГРАФИК</span></div>
+    </aside>
+    <section class="auth-card" aria-labelledby="page-title">
+        <a class="brand" href="{% url 'service_list_view' %}" aria-label="Каталог SABT"><span class="brand__icon" aria-hidden="true">S</span><span class="brand__name">SABT</span></a>
+        {% if success %}
+            <p class="eyebrow">Почти готово</p><h1 id="page-title">Проверьте почту</h1>
+            <div class="notice notice--success" role="status">{{ success }}</div>
+            <p class="auth-footer"><a href="{% url 'login' %}">Перейти ко входу</a></p>
+        {% else %}
+            <p class="eyebrow">Создайте аккаунт</p><h1 id="page-title">Регистрация</h1>
+            <p class="auth-intro">Заполните форму, чтобы создать личный кабинет.</p>
+            {% if error %}<div class="notice notice--error" role="alert">{{ error }}</div>{% endif %}
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <div class="form-field"><label for="id_username">Имя пользователя</label><input id="id_username" name="username" type="text" value="{{ request.POST.username|default:'' }}" placeholder="Например, Иван" autocomplete="username" required></div>
+                <div class="form-field"><label for="id_email">Электронная почта</label><input id="id_email" name="email" type="email" value="{{ request.POST.email|default:'' }}" placeholder="name@example.com" autocomplete="email" required></div>
+                <div class="form-field"><label for="id_password1">Пароль</label><input id="id_password1" name="password1" type="password" placeholder="Придумайте пароль" autocomplete="new-password" required><small>Не менее 8 символов. Пароль не должен быть слишком простым.</small></div>
+                <div class="form-field"><label for="id_password2">Повторите пароль</label><input id="id_password2" name="password2" type="password" placeholder="Введите пароль ещё раз" autocomplete="new-password" required></div>
+                <button class="button button--primary" type="submit">Создать аккаунт</button>
+            </form>
+            <p class="auth-footer">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+﻿{% extends 'auth/base.html' %}
+
+{% block title %}Вход — SABT{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+    <aside class="welcome-panel" aria-label="Онлайн-запись">
+        <div class="welcome-panel__top"><span class="welcome-mark">S</span><span>SABT <span class="brand-caption">· запись онлайн</span></span></div>
+        <div class="welcome-panel__copy"><p class="welcome-kicker">С ВОЗВРАЩЕНИЕМ</p><p class="welcome-quote">Ваше время<br>уже ждёт<br><em>вас.</em></p><p class="welcome-note">Войдите, чтобы увидеть свои записи и подобрать новую услугу.</p></div>
+        <div class="booking-visual" aria-hidden="true"><div class="booking-visual__head"><span></span><span></span><span></span><b></b></div><div class="booking-visual__grid"><i></i><i></i><i></i><i></i><i class="is-selected"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="booking-visual__confirm"><span></span><span></span></div></div>
+        <div class="welcome-panel__bottom"><span>ВАШИ ЗАПИСИ В ОДНОМ МЕСТЕ</span></div>
+    </aside>
+    <section class="auth-card" aria-labelledby="page-title">
+        <a class="brand" href="{% url 'service_list_view' %}" aria-label="Каталог SABT"><span class="brand__icon" aria-hidden="true">S</span><span class="brand__name">SABT</span></a>
+        <p class="eyebrow">С возвращением</p>
+        <h1 id="page-title">Вход в аккаунт</h1>
+        <p class="auth-intro">Введите электронную почту и пароль.</p>
+        {% if success %}<div class="notice notice--success" role="status">{{ success }}</div>{% endif %}
+        {% if error %}<div class="notice notice--error" role="alert">{{ error }}</div>{% endif %}
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="form-field"><label for="id_email">Электронная почта</label><input id="id_email" name="email" type="email" value="{{ request.POST.email|default:'' }}" placeholder="name@example.com" autocomplete="email" required></div>
+            <div class="form-field"><label for="id_password1">Пароль</label><input id="id_password1" name="password1" type="password" placeholder="Введите пароль" autocomplete="current-password" required></div>
+            <button class="button button--primary" type="submit">Войти</button>
+        </form>
+        <p class="auth-footer">Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+    </section>
+</div>
+{% endblock %}
