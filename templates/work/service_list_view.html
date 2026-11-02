@@ -1,0 +1,67 @@
+﻿{% extends 'work/base.html' %}
+
+{% block title %}Услуги — SABT{% endblock %}
+
+{% block content %}
+<section class="work-heading">
+    <div>
+        <p class="work-eyebrow">SABT · КАТАЛОГ</p>
+        <h1>{% if current_category %}{{ current_category.name }}{% else %}Наши услуги{% endif %}<span>.</span></h1>
+        <p class="work-lead">{% if current_category %}Услуги категории «{{ current_category.name }}». Выберите услугу, чтобы увидеть условия и записаться.{% else %}Выберите услугу и найдите время для себя.{% endif %}</p>
+    </div>
+    {% if request.user.is_staff %}<a class="work-button work-button--primary" href="{% url 'create_service_view' %}">Добавить услугу <span>↗</span></a>{% endif %}
+</section>
+
+<form method="get" class="work-form service-filters" role="search">
+    <div class="work-form__field service-filters__search">
+        <label for="service-search">Поиск услуг</label>
+        <input id="service-search" type="search" name="q" value="{{ search }}" placeholder="Название или описание">
+    </div>
+    <div class="work-form__field">
+        <label for="service-city-filter">Город</label>
+        <input id="service-city-filter" type="text" name="city" value="{{ selected_city }}" placeholder="Например, Душанбе">
+    </div>
+    <div class="work-form__field">
+        <label for="service-category-filter">Категория</label>
+        <select id="service-category-filter" name="category">
+            <option value="">Все категории</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="work-form__actions">
+        <a class="work-button work-button--secondary" href="{% url 'service_list_view' %}">Сбросить</a>
+        <button class="work-button work-button--primary" type="submit">Найти</button>
+    </div>
+</form>
+
+{% if request.user.is_staff %}
+    <div class="work-admin-links"><a href="{% url 'category_list_view' %}">Управление категориями</a><a href="{% url 'appointment_management_view' %}">Все записи</a></div>
+{% endif %}
+
+<section class="service-grid" aria-label="Список услуг">
+    {% for service in services %}
+        <article class="service-card">
+            <a class="service-card__image-link" href="{% url 'service_detail_view' service.id %}">
+                <div class="service-card__image-wrap">
+                    {% if service.image %}<img class="service-card__image" src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}<div class="service-card__placeholder">S</div>{% endif %}
+                    <span class="service-card__index">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                </div>
+            </a>
+            <div class="service-card__body">
+                <div class="service-card__meta"><span>{{ service.category.name|default:'Услуга' }}</span><span>·</span><span>{{ service.city }}</span></div>
+                <h2><a href="{% url 'service_detail_view' service.id %}">{{ service.name }}</a></h2>
+                <div class="service-card__facts"><span>{{ service.price|floatformat:2 }} сомони</span><span>{{ service.duration }} мин.</span></div>
+                <p class="service-card__description">{{ service.description }}</p>
+                <div class="service-card__actions">
+                    <a href="{% url 'service_detail_view' service.id %}">Подробнее <span>↗</span></a>
+                    {% if request.user.is_staff %}<a href="{% url 'update_service_view' service.id %}">Изменить</a><a class="service-card__delete" href="{% url 'delete_service_view' service.id %}">Удалить</a>{% endif %}
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <div class="work-empty"><span class="work-empty__icon">✓</span><h2>Пока здесь пусто</h2><p>Новые услуги появятся здесь совсем скоро.</p>{% if request.user.is_staff %}<a class="work-button work-button--primary" href="{% url 'create_service_view' %}">Добавить услугу <span>↗</span></a>{% endif %}</div>
+    {% endfor %}
+</section>
+{% endblock %}

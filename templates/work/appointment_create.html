@@ -1,0 +1,53 @@
+{% extends 'work/base.html' %}
+
+{% block title %}Запись — SABT{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <a class="work-back" href="{% url 'service_detail_view' service.id %}">← <span>К услуге</span></a>
+    <div class="form-panel">
+        <p class="work-eyebrow">ОНЛАЙН-ЗАПИСЬ · {{ service.category.name|default:'SABT' }}</p>
+        <h1>Выберите время<span>.</span></h1>
+        <p class="work-lead">{{ service.name }} · {{ service.city }}, {{ service.location }} · {{ service.price|floatformat:2 }} сомони · {{ service.duration }} мин.</p>
+        {% if error %}<div class="work-alert" role="alert">{{ error }}</div>{% endif %}
+
+        <form method="get" class="work-form">
+            <div class="work-form__field">
+                <label for="appointment-date">Дата</label>
+                <input id="appointment-date" type="date" name="date" min="{{ today }}" value="{{ selected_date }}" required>
+            </div>
+            <div class="work-form__actions">
+                <button class="work-button work-button--secondary" type="submit">Нишон додани вақтҳои холӣ</button>
+            </div>
+        </form>
+
+        {% if selected_date %}
+            <form method="post" class="work-form">
+                {% csrf_token %}
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                <div class="work-form__field">
+                    <label for="appointment-time">Вақт</label>
+                    <select id="appointment-time" name="time" required {% if not available_times %}disabled{% endif %}>
+                        {% if available_times %}
+                            <option value="">Вақтро интихоб кунед</option>
+                            {% for slot in available_times %}
+                                <option value="{{ slot|time:'H:i' }}">{{ slot|time:'H:i' }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="">Вақти холӣ нест</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="work-form__field">
+                    <label for="appointment-note">Шарҳ <span class="work-optional">ихтиёрӣ</span></label>
+                    <textarea id="appointment-note" name="note" rows="4" maxlength="5000" placeholder="Хоҳишҳои иловагӣ">{{ note }}</textarea>
+                </div>
+                <div class="work-form__actions">
+                    <a class="work-button work-button--secondary" href="{% url 'service_detail_view' service.id %}">Бекор кардан</a>
+                    <button class="work-button work-button--primary" type="submit" {% if not available_times %}disabled{% endif %}>Фиристодани дархост <span>↗</span></button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,9 @@
+﻿{% extends 'work/base.html' %}
+{% block title %}Мои записи — SABT{% endblock %}
+{% block content %}
+<section class="work-heading"><div><p class="work-eyebrow">ЛИЧНЫЙ КАБИНЕТ · SABT</p><h1>Мои записи<span>.</span></h1><p class="work-lead">Здесь собраны ваши заявки и подтверждённые визиты.</p></div><a class="work-button work-button--primary" href="{% url 'service_list_view' %}">Выбрать услугу <span>↗</span></a></section>
+<section class="management-list">
+    {% for appointment in appointments %}<article class="appointment-row"><div class="appointment-row__date"><strong>{{ appointment.date|date:'d' }}</strong><span>{{ appointment.date|date:'M Y' }}</span></div><div class="appointment-row__main"><h2><a href="{% url 'appointment_detail_view' appointment.id %}">{{ appointment.service.name }}</a></h2><p>{{ appointment.service.city }} · {{ appointment.time|time:'H:i' }}</p></div><span class="status-pill status-pill--{{ appointment.status }}">{{ appointment.get_status_display }}</span><a class="appointment-row__open" href="{% url 'appointment_detail_view' appointment.id %}">Подробнее ↗</a></article>
+    {% empty %}<div class="work-empty"><span class="work-empty__icon">✓</span><h2>Записей пока нет</h2><p>Выберите услугу и отправьте заявку на удобное время.</p><a class="work-button work-button--primary" href="{% url 'service_list_view' %}">Открыть каталог <span>↗</span></a></div>{% endfor %}
+</section>
+{% endblock %}

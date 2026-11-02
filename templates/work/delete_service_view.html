@@ -1,0 +1,20 @@
+﻿{% extends 'work/base.html' %}
+
+{% block title %}Удалить услугу — SABT{% endblock %}
+
+{% block content %}
+<section class="form-page form-page--confirm">
+    <a class="work-back" href="{% url 'service_list_view' %}">← <span>Вернуться к услугам</span></a>
+    <div class="confirm-panel">
+        <div class="confirm-panel__icon">!</div>
+        <p class="work-eyebrow">ПОДТВЕРЖДЕНИЕ</p>
+        <h1>Удалить услугу<span>?</span></h1>
+        <p class="work-lead">Переместить «{{ service.name }}» в корзину? Вы сможете восстановить её позже.</p>
+        <form method="POST" class="work-form__actions">
+            {% csrf_token %}
+            <a class="work-button work-button--secondary" href="{% url 'service_list_view' %}">Оставить</a>
+            <button class="work-button work-button--danger" type="submit">Переместить в корзину</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

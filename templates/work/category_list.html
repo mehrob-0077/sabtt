@@ -1,0 +1,10 @@
+﻿{% extends 'work/base.html' %}
+{% block title %}Категории — SABT{% endblock %}
+{% block content %}
+<section class="work-heading"><div><p class="work-eyebrow">АДМИНИСТРАТОР · КАТАЛОГ</p><h1>Категории<span>.</span></h1><p class="work-lead">Группируйте услуги, чтобы клиентам было проще выбирать.</p></div><a class="work-button work-button--primary" href="{% url 'create_category_view' %}">Новая категория <span>+</span></a></section>
+<section class="management-list">
+    {% for category in categories %}
+        <article class="management-row"><div><h2>{{ category.name }}</h2><small>{{ category.services.count }} услуг</small></div><div class="management-row__actions"><a href="{% url 'update_category_view' category.id %}">Изменить</a><a class="service-card__delete" href="{% url 'delete_category_view' category.id %}">Удалить</a></div></article>
+    {% empty %}<div class="work-empty"><h2>Категорий пока нет</h2><p>Создайте первую категорию для каталога.</p></div>{% endfor %}
+</section>
+{% endblock %}

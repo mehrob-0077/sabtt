@@ -1,0 +1,55 @@
+﻿{% extends 'work/base.html' %}
+
+{% block title %}Новая услуга — SABT{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <a class="work-back" href="{% url 'service_list_view' %}">← <span>Вернуться к услугам</span></a>
+    <div class="form-panel">
+        <p class="work-eyebrow">КАТАЛОГ · НОВАЯ ПОЗИЦИЯ</p>
+        <h1>Добавить услугу<span>.</span></h1>
+        <p class="work-lead">Расскажите о своей услуге — остальное мы красиво оформим.</p>
+
+        {% if error %}<div class="work-alert" role="alert">{{ error }}</div>{% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="work-form">
+            {% csrf_token %}
+            <div class="work-form__field">
+                <label for="service-name">Название услуги</label>
+                <input id="service-name" type="text" name="name" value="{{ service.name }}" placeholder="Например, расслабляющий массаж" required>
+            </div>
+            <div class="work-form__field">
+                <label for="service-category">Категория</label>
+                <select id="service-category" name="category"><option value="">Без категории</option>{% for category in categories %}<option value="{{ category.id }}" {% if service.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select>
+            </div>
+            <div class="work-form__field">
+                <label for="service-description">Описание</label>
+                <textarea id="service-description" name="description" rows="5" placeholder="Коротко расскажите, что входит в услугу" required>{{ service.description }}</textarea>
+            </div>
+            <div class="work-form__row">
+                <div class="work-form__field"><label for="service-price">Цена (сомони)</label><input id="service-price" type="number" name="price" min="0" step="0.01" value="{{ service.price|default_if_none:'' }}" placeholder="Например, 50" required></div>
+                <div class="work-form__field"><label for="service-duration">Длительность (минут)</label><input id="service-duration" type="number" name="duration" min="30" max="480" step="30" value="{{ service.duration|default:30 }}" required><small>Интервал записи — 30 минут.</small></div>
+            </div>
+            <div class="work-form__field">
+                <label for="service-image">Фотография</label>
+                <input id="service-image" class="work-file" type="file" name="image" accept="image/*" required>
+                <small>Выберите изображение для карточки услуги.</small>
+            </div>
+            <div class="work-form__row">
+                <div class="work-form__field">
+                    <label for="service-city">Город</label>
+                <input id="service-city" type="text" name="city" value="{{ service.city }}" placeholder="Город" required>
+                </div>
+                <div class="work-form__field">
+                    <label for="service-location">Адрес</label>
+                <input id="service-location" type="text" name="location" value="{{ service.location }}" placeholder="Улица и номер" required>
+                </div>
+            </div>
+            <div class="work-form__actions">
+                <a class="work-button work-button--secondary" href="{% url 'service_list_view' %}">Отмена</a>
+                <button class="work-button work-button--primary" type="submit">Добавить услугу <span>↗</span></button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

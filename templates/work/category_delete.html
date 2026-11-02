@@ -1,0 +1,5 @@
+﻿{% extends 'work/base.html' %}
+{% block title %}Удалить категорию — SABT{% endblock %}
+{% block content %}
+<section class="form-page form-page--confirm"><a class="work-back" href="{% url 'category_list_view' %}">← <span>Все категории</span></a><div class="confirm-panel"><div class="confirm-panel__icon">!</div><p class="work-eyebrow">АДМИНИСТРАТОР · КАТАЛОГ</p><h1>Удалить категорию<span>?</span></h1><p class="work-lead">Категория «{{ category.name }}» будет удалена. Связанные услуги останутся без категории.</p><form method="post" class="work-form__actions">{% csrf_token %}<a class="work-button work-button--secondary" href="{% url 'category_list_view' %}">Отмена</a><button class="work-button work-button--danger" type="submit">Удалить</button></form></div></section>
+{% endblock %}

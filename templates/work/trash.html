@@ -1,0 +1,39 @@
+{% extends 'work/base.html' %}
+
+{% block title %}Корзина — SABT{% endblock %}
+
+{% block content %}
+<section class="work-heading">
+    <div>
+        <p class="work-eyebrow">SABT · УПРАВЛЕНИЕ</p>
+        <h1>Корзина<span>.</span></h1>
+        <p class="work-lead">Удалённые услуги можно восстановить или удалить навсегда.</p>
+    </div>
+    <a class="work-button work-button--secondary" href="{% url 'service_list_view' %}">К услугам</a>
+</section>
+
+<section class="service-grid" aria-label="Удалённые услуги">
+    {% for service in services %}
+        <article class="service-card">
+            <div class="service-card__body">
+                <div class="service-card__meta"><span>{{ service.category.name|default:'Услуга' }}</span><span>·</span><span>{{ service.city }}</span></div>
+                <h2>{{ service.name }}</h2>
+                <p class="service-card__description">{{ service.description }}</p>
+                <p>Удалена: {{ service.deleted_at|date:'d.m.Y H:i' }}</p>
+                <div class="service-card__actions">
+                    <form method="post" action="{% url 'restore_product' service.id %}">
+                        {% csrf_token %}
+                        <button class="work-button work-button--primary" type="submit">Восстановить</button>
+                    </form>
+                    <form method="post" action="{% url 'hard_delete_product_view' service.id %}" onsubmit="return confirm('Удалить услугу навсегда?')">
+                        {% csrf_token %}
+                        <button class="work-button work-button--danger" type="submit">Удалить навсегда</button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <div class="work-empty"><span class="work-empty__icon">✓</span><h2>Корзина пуста</h2><p>Удалённые услуги появятся здесь.</p></div>
+    {% endfor %}
+</section>
+{% endblock %}

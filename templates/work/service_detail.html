@@ -1,0 +1,23 @@
+﻿{% extends 'work/base.html' %}
+
+{% block title %}{{ service.name }} — SABT{% endblock %}
+
+{% block content %}
+<div class="detail-back"><a class="work-back" href="{% url 'service_list_view' %}">← <span>Все услуги</span></a></div>
+<article class="service-detail">
+    <div class="service-detail__media">{% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}<div class="service-card__placeholder">S</div>{% endif %}</div>
+    <div class="service-detail__content">
+        <p class="work-eyebrow">{{ service.category.name|default:'УСЛУГА' }} · {{ service.city }}</p>
+        <h1>{{ service.name }}<span>.</span></h1>
+        <p class="service-detail__location">{{ service.location }}, {{ service.city }}</p>
+        <div class="service-detail__facts"><span><strong>{{ service.price|floatformat:2 }}</strong> сомони</span><span><strong>{{ service.duration }}</strong> мин.</span></div>
+        <p class="service-detail__description">{{ service.description|linebreaksbr }}</p>
+        <div class="service-detail__actions">
+            {% if request.user.is_authenticated %}{% if request.user.is_staff or service.owner_id == request.user.id %}<span class="work-button work-button--secondary" aria-disabled="true">Владельцы не могут записаться</span>{% else %}<a class="work-button work-button--primary" href="{% url 'appointment_create_view' service.id %}">Записаться <span>↗</span></a>{% endif %}{% else %}<a class="work-button work-button--primary" href="{% url 'login' %}?next={% url 'appointment_create_view' service.id %}">Войдите, чтобы записаться <span>↗</span></a>{% endif %}
+            {% if request.user.is_staff %}<a class="work-button work-button--secondary" href="{% url 'update_service_view' service.id %}">Изменить услугу</a>{% endif %}
+        </div>
+    </div>
+</article>
+
+{% endblock %}
+

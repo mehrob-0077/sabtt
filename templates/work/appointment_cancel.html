@@ -1,0 +1,5 @@
+﻿{% extends 'work/base.html' %}
+{% block title %}Отмена записи — SABT{% endblock %}
+{% block content %}
+<section class="form-page form-page--confirm"><a class="work-back" href="{% url 'appointment_detail_view' appointment.id %}">← <span>К записи</span></a><div class="confirm-panel"><div class="confirm-panel__icon">!</div><p class="work-eyebrow">УПРАВЛЕНИЕ ЗАПИСЬЮ</p><h1>Отменить запись<span>?</span></h1><p class="work-lead">{{ appointment.service.name }} · {{ appointment.date|date:'d.m.Y' }} в {{ appointment.time|time:'H:i' }}. После отмены это время снова станет доступно.</p><form method="post" class="work-form__actions">{% csrf_token %}<a class="work-button work-button--secondary" href="{% url 'appointment_detail_view' appointment.id %}">Оставить запись</a><button class="work-button work-button--danger" type="submit">Да, отменить</button></form></div></section>
+{% endblock %}

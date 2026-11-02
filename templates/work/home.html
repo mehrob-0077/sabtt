@@ -1,0 +1,28 @@
+﻿{% extends 'work/base.html' %}
+
+{% block title %}Категории услуг — SABT{% endblock %}
+
+{% block content %}
+<section class="work-heading">
+    <div>
+        <p class="work-eyebrow">SABT · ВЫБЕРИТЕ НАПРАВЛЕНИЕ</p>
+        <h1>Категории<span>.</span></h1>
+        <p class="work-lead">Выберите категорию, чтобы посмотреть услуги, фотографии, условия и цены.</p>
+    </div>
+    {% if request.user.is_staff %}<a class="work-button work-button--primary" href="{% url 'create_service_view' %}">Добавить услугу <span>↗</span></a>{% endif %}
+</section>
+
+<section class="category-grid" aria-label="Категории услуг">
+    {% for category in categories %}
+        <a class="category-card" href="{% url 'category_detail_view' category.id %}">
+            {% if category.image %}<img class="category-card__image" src="{{ category.image.url }}" alt="{{ category.name }}">{% else %}<span class="category-card__placeholder">{{ category.name|first|upper }}</span>{% endif %}
+            <span class="category-card__shade"></span>
+            <span class="category-card__number">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+            <span class="category-card__content"><strong>{{ category.name }}</strong><small>{{ category.service_count }} услуг</small></span>
+            <span class="category-card__arrow" aria-hidden="true">↗</span>
+        </a>
+    {% empty %}
+        <div class="work-empty"><span class="work-empty__icon">✦</span><h2>Категорий пока нет</h2><p>Услуги появятся здесь после добавления в каталог.</p>{% if request.user.is_staff %}<a class="work-button work-button--primary" href="{% url 'create_service_view' %}">Добавить услугу <span>↗</span></a>{% endif %}</div>
+    {% endfor %}
+</section>
+{% endblock %}
