@@ -2,8 +2,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.utils.http import url_has_allowed_host_and_scheme
-from django.views.decorators.http import require_POST
 
 from .models import CostumUser, EmailConfirmed
 from sabt.models import Appointment, Service
@@ -11,8 +9,8 @@ from sabt.models import Appointment, Service
 
 def register_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
-        email = request.POST.get('email', '').strip().lower()
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
         password = request.POST.get('password1', '')
         confirm_password = request.POST.get('password2', '')
 
@@ -34,14 +32,14 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email', '').strip().lower()
+        email = request.POST.get('email', '')
         password = request.POST.get('password1', '')
         user = authenticate(request, email=email, password=password)
         if user is None:
             return render(request, 'auth/login.html', {'error': 'Неверный адрес электронной почты или пароль.'})
         login(request, user)
         next_url = request.POST.get('next') or request.GET.get('next')
-        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        if next_url and next_url.startswith('/') and not next_url.startswith('//') and '\\' not in next_url:
             return redirect(next_url)
         return redirect('service_list_view')
     return render(request, 'auth/login.html')
@@ -58,7 +56,6 @@ def home_view(request):
 
 
 @login_required
-@require_POST
 def logout_view(request):
     logout(request)
     return redirect('login')
@@ -98,8 +95,8 @@ def change_password_view(request):
 def profile_view(request):
     error = None
     if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
-        email = request.POST.get('email', '').strip().lower()
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
         if not username:
             error = 'Имя пользователя обязательно.'
         elif len(username) > 150:
