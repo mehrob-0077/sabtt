@@ -1,0 +1,24 @@
+databases:
+  - name: sabt-db
+    databaseName: sabt
+    user: sabt
+    plan: free
+
+services:
+  - type: web
+    name: sabt
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn server.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sabt-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: TIME_ZONE
+        value: Asia/Dushanbe
