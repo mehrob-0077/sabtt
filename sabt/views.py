@@ -272,6 +272,12 @@ def available_appointment_times(service, appointment_date):
     return available_times
 
 
+def appointment_can_be_cancelled(appointment, now):
+    appointment_datetime = datetime.combine(appointment.date, appointment.time)
+    current_datetime = datetime.combine(now.date(), now.time().replace(tzinfo=None))
+    return appointment.status != Appointment.STATUS_REJECTED and appointment_datetime > current_datetime
+
+
 @custom_login_required
 def my_appointments_view(request):
     appointments = Appointment.objects.filter(user=request.user).select_related('service').order_by('-date', '-time')
@@ -282,9 +288,7 @@ def my_appointments_view(request):
 def appointment_detail_view(request, id):
     appointment = get_object_or_404(Appointment.objects.select_related('service'), pk=id, user=request.user)
     now = timezone.localtime()
-    can_cancel = appointment.status != Appointment.STATUS_REJECTED and (
-        appointment.date > now.date() or (appointment.date == now.date() and appointment.time > now.time().replace(tzinfo=None))
-    )
+    can_cancel = appointment_can_be_cancelled(appointment, now)
     return render(request, 'work/appointment_detail.html', {'appointment': appointment, 'today': now.date(), 'can_cancel': can_cancel})
 
 
@@ -292,20 +296,15 @@ def appointment_detail_view(request, id):
 def cancel_appointment_view(request, id):
     appointment = get_object_or_404(Appointment.objects.select_related('service'), pk=id, user=request.user)
     now = timezone.localtime()
-    can_cancel = appointment.status != Appointment.STATUS_REJECTED and (
-        appointment.date > now.date() or (appointment.date == now.date() and appointment.time > now.time().replace(tzinfo=None))
-    )
+    can_cancel = appointment_can_be_cancelled(appointment, now)
     if request.method == 'POST' and can_cancel:
         appointment.delete()
         return redirect('my_appointments_view')
-    if not can_cancel:
-        return render(request, 'work/appointment_detail.html', {
-            'appointment': appointment,
-            'error': 'Эту запись уже нельзя отменить.' if request.method == 'POST' else None,
-            'today': now.date(),
-            'can_cancel': False,
-        })
-    return render(request, 'work/appointment_cancel.html', {'appointment': appointment, 'today': now.date()})
+    template = 'work/appointment_cancel.html' if can_cancel else 'work/appointment_detail.html'
+    context = {'appointment': appointment, 'today': now.date(), 'can_cancel': can_cancel}
+    if request.method == 'POST':
+        context['error'] = 'Эту запись уже нельзя отменить.'
+    return render(request, template, context)
 
 
 @custom_staff_required
@@ -323,19 +322,17 @@ def update_appointment_status_view(request, id):
     status = request.POST.get('status', '')
     if status not in dict(Appointment.STATUS_CHOICES):
         return redirect('appointment_management_view')
-    if status != Appointment.STATUS_REJECTED:
-        available = appointment_time_is_available(
-            appointment.service,
-            appointment.date,
-            appointment.time,
-            exclude_appointment_id=appointment.pk,
-        )
-        if not available:
-            return render(request, 'work/appointment_management.html', {
-                'appointments': Appointment.objects.select_related('user', 'service').order_by('date', 'time'),
-                'statuses': Appointment.STATUS_CHOICES,
-                'error': 'Нельзя подтвердить запись: это время уже занято.',
-            })
+    if status != Appointment.STATUS_REJECTED and not appointment_time_is_available(
+        appointment.service,
+        appointment.date,
+        appointment.time,
+        exclude_appointment_id=appointment.pk,
+    ):
+        return render(request, 'work/appointment_management.html', {
+            'appointments': Appointment.objects.select_related('user', 'service').order_by('date', 'time'),
+            'statuses': Appointment.STATUS_CHOICES,
+            'error': 'Нельзя подтвердить запись: это время уже занято.',
+        })
     appointment.status = status
     appointment.save(update_fields=['status'])
     return redirect('appointment_management_view')
