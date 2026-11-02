@@ -195,6 +195,7 @@ def appointment_create_view(request, service_id):
             Appointment.objects.create(
                 user=request.user,
                 service=service,
+                customer_name=form.cleaned_data['customer_name'],
                 date=appointment_date,
                 time=appointment_time,
                 note=form.cleaned_data['note'],

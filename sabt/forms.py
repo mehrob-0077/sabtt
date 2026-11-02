@@ -15,10 +15,11 @@ class ServiceForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.ModelForm):
+    customer_name = forms.CharField(max_length=200, label='Имя клиента')
     note = forms.CharField(required=False, max_length=5000)
 
     class Meta:
         model = Appointment
-        fields = ['date', 'time', 'note']
+        fields = ['customer_name', 'date', 'time', 'note']
 
 

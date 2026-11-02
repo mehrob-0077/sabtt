@@ -26,6 +26,10 @@
                 {% csrf_token %}
                 <input type="hidden" name="date" value="{{ selected_date }}">
                 <div class="work-form__field">
+                    <label for="customer-name">Имя клиента</label>
+                    <input id="customer-name" type="text" name="customer_name" maxlength="200" value="{{ request.POST.customer_name }}" required>
+                </div>
+                <div class="work-form__field">
                     <label for="appointment-time">Вақт</label>
                     <select id="appointment-time" name="time" required {% if not available_times %}disabled{% endif %}>
                         {% if available_times %}

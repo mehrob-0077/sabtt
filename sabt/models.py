@@ -60,6 +60,7 @@ class Appointment(models.Model):
 
     user = models.ForeignKey(CostumUser, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    customer_name = models.CharField(max_length=200, blank=True, default='')
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
