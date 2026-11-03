@@ -12,7 +12,9 @@
     <div class="work-shell">
         <header class="work-header">
             <a class="work-brand" href="{% url 'index' %}"><span class="work-brand__icon">S</span><span>SABT <small>СТУДИЯ УСЛУГ</small></span></a>
-            <nav class="work-nav">
+            <details class="work-menu">
+                <summary class="work-menu__toggle" aria-label="Открыть меню" aria-controls="work-navigation"><span></span><span></span><span></span></summary>
+            <nav class="work-nav" id="work-navigation">
                 <a href="{% url 'index' %}">Категории</a>
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'my_appointments_view' %}">Мои записи</a>
@@ -21,6 +23,7 @@
                 {% else %}<a href="{% url 'login' %}">Войти</a><a href="{% url 'register' %}">Зарегистрироваться</a>{% endif %}
                 {% if request.user.is_staff %}<a href="{% url 'appointment_management_view' %}">Записи</a><a class="work-nav__cta" href="{% url 'create_service_view' %}">Добавить услугу <span>+</span></a>{% endif %}
             </nav>
+            </details>
         </header>
         <main class="work-main">
             {% if messages %}<div class="work-messages">{% for message in messages %}<div class="notice notice--{{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}

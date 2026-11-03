@@ -722,3 +722,59 @@ body::after { animation: orbit 19s linear infinite reverse, electric-fade 4.5s e
 .category-form__preview { width: min(100%, 22rem); max-height: 13rem; border: 1px solid rgb(131 169 255 / 24%); border-radius: .75rem; object-fit: cover; }
 @media (max-width: 560px) { .category-card { min-height: 14rem; } }
 
+/* Mobile navigation and touch layout */
+.work-menu { display: contents; }
+.work-menu__toggle { display: none; }
+@media (max-width: 700px) {
+    .work-shell { width: min(100% - 1.5rem, 76rem); }
+    .work-header { position: relative; min-height: 4.8rem; flex-wrap: nowrap; gap: .75rem; }
+    .work-brand { gap: .55rem; font-size: .76rem; }
+    .work-brand__icon { width: 2.35rem; height: 2.35rem; flex: 0 0 2.35rem; }
+    .work-brand small { font-size: .48rem; }
+    .work-menu { position: relative; display: block; margin-left: auto; }
+    .work-menu__toggle { display: flex; width: 2.8rem; height: 2.8rem; flex-direction: column; align-items: center; justify-content: center; gap: .28rem; border: 1px solid rgb(131 169 255 / 35%); border-radius: .7rem; background: #111c30; cursor: pointer; list-style: none; }
+    .work-menu__toggle::-webkit-details-marker { display: none; }
+    .work-menu__toggle span { width: 1.1rem; height: 2px; border-radius: 2px; background: #b6cbff; transition: transform .2s, opacity .2s; }
+    .work-menu[open] .work-menu__toggle span:first-child { transform: translateY(.38rem) rotate(45deg); }
+    .work-menu[open] .work-menu__toggle span:nth-child(2) { opacity: 0; }
+    .work-menu[open] .work-menu__toggle span:last-child { transform: translateY(-.38rem) rotate(-45deg); }
+    .work-nav { position: absolute; z-index: 20; top: calc(100% + .65rem); right: 0; display: none; width: min(19rem, calc(100vw - 1.5rem)); align-items: stretch; gap: .3rem; padding: .55rem; border: 1px solid rgb(131 169 255 / 25%); border-radius: .85rem; background: #101a2b; box-shadow: 0 18px 40px rgb(0 0 0 / 42%); }
+    .work-menu[open] .work-nav { display: flex; flex-direction: column; }
+    .work-nav a, .work-nav .work-nav__cta { display: flex; min-height: 2.9rem; align-items: center; padding: 0 .85rem; border: 1px solid transparent; border-radius: .55rem; font-size: .84rem; }
+    .work-nav a:hover, .work-nav .work-nav__cta:hover { border-color: rgb(131 169 255 / 22%); background: rgb(79 125 255 / 9%); }
+    .work-nav .work-nav__cta { justify-content: space-between; margin-top: .2rem; }
+    .work-main { min-height: calc(100svh - 8rem); padding: 2rem 0; }
+    .work-heading { gap: 1rem; margin-bottom: 1.6rem; }
+    .work-heading h1 { font-size: clamp(2.25rem, 11vw, 3.5rem); }
+    .work-heading .work-button { width: 100%; }
+    .service-grid { gap: .85rem; }
+    .service-card__image-wrap { height: clamp(11rem, 58vw, 15rem); }
+    .service-card__body { padding: 1rem; }
+    .service-card__description { min-height: 0; }
+    .category-grid { gap: .75rem; }
+    .category-card { min-height: 12rem; padding: 1.05rem; }
+    .work-form__row { grid-template-columns: 1fr; }
+    .work-form__actions { flex-direction: column-reverse; }
+    .work-form__actions .work-button { width: 100%; }
+    .service-filters { grid-template-columns: 1fr 1fr; }
+    .service-filters__search, .service-filters .work-form__actions { grid-column: 1 / -1; }
+    .work-button, .button { min-height: 2.9rem; }
+    .management-row, .admin-appointment { align-items: flex-start; flex-wrap: wrap; padding: .9rem; }
+    .management-row__actions, .admin-appointment__actions { width: 100%; flex-wrap: wrap; }
+    .profile-card { padding: 1.2rem; }
+    .work-footer { padding: 1rem 0; }
+}
+@media (max-width: 380px) {
+    .work-shell { width: calc(100% - 1.1rem); }
+    .work-brand { letter-spacing: .1em; }
+    .work-brand small { letter-spacing: .07em; }
+    .service-filters { grid-template-columns: 1fr; }
+    .service-filters__search, .service-filters .work-form__actions { grid-column: auto; }
+    .account-stats { grid-template-columns: 1fr; }
+    .work-footer { flex-direction: column; gap: .45rem; }
+}
+@media (hover: none) and (pointer: coarse) {
+    .service-card:hover, .category-card:hover, .management-row:hover, .appointment-row:hover, .review-card:hover { transform: none; }
+    .work-button--primary, .button--primary { animation: none; }
+}
+
