@@ -725,14 +725,15 @@ body::after { animation: orbit 19s linear infinite reverse, electric-fade 4.5s e
 /* Mobile navigation and touch layout */
 .work-menu { display: contents; }
 .work-menu__toggle { display: none; }
+.work-mobile-shortcuts { display: none; }
 @media (max-width: 700px) {
     .work-shell { width: min(100% - 1.5rem, 76rem); }
-    .work-header { position: relative; min-height: 4.8rem; flex-wrap: nowrap; gap: .75rem; }
-    .work-brand { gap: .55rem; font-size: .76rem; }
-    .work-brand__icon { width: 2.35rem; height: 2.35rem; flex: 0 0 2.35rem; }
-    .work-brand small { font-size: .48rem; }
+    .work-header { position: relative; min-height: 0; flex-wrap: wrap; gap: .35rem .65rem; padding: .45rem 0 .6rem; }
+    .work-brand { gap: .45rem; font-size: .7rem; letter-spacing: .12em; }
+    .work-brand__icon { width: 2rem; height: 2rem; flex: 0 0 2rem; font-size: 1rem; }
+    .work-brand small { font-size: .44rem; }
     .work-menu { position: relative; display: block; margin-left: auto; }
-    .work-menu__toggle { display: flex; width: 2.8rem; height: 2.8rem; flex-direction: column; align-items: center; justify-content: center; gap: .28rem; border: 1px solid rgb(131 169 255 / 35%); border-radius: .7rem; background: #111c30; cursor: pointer; list-style: none; }
+    .work-menu__toggle { display: flex; width: 2.35rem; height: 2.35rem; flex-direction: column; align-items: center; justify-content: center; gap: .26rem; border: 1px solid rgb(131 169 255 / 35%); border-radius: .65rem; background: #111c30; cursor: pointer; list-style: none; }
     .work-menu__toggle::-webkit-details-marker { display: none; }
     .work-menu__toggle span { width: 1.1rem; height: 2px; border-radius: 2px; background: #b6cbff; transition: transform .2s, opacity .2s; }
     .work-menu[open] .work-menu__toggle span:first-child { transform: translateY(.38rem) rotate(45deg); }
@@ -740,6 +741,12 @@ body::after { animation: orbit 19s linear infinite reverse, electric-fade 4.5s e
     .work-menu[open] .work-menu__toggle span:last-child { transform: translateY(-.38rem) rotate(-45deg); }
     .work-nav { position: absolute; z-index: 20; top: calc(100% + .65rem); right: 0; display: none; width: min(19rem, calc(100vw - 1.5rem)); align-items: stretch; gap: .3rem; padding: .55rem; border: 1px solid rgb(131 169 255 / 25%); border-radius: .85rem; background: #101a2b; box-shadow: 0 18px 40px rgb(0 0 0 / 42%); }
     .work-menu[open] .work-nav { display: flex; flex-direction: column; }
+    .work-nav__quick { display: none !important; }
+    .work-mobile-shortcuts { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+    .work-mobile-shortcuts a { display: flex; min-height: 2.55rem; align-items: center; justify-content: center; gap: .45rem; border: 1px solid rgb(131 169 255 / 28%); border-radius: .65rem; background: linear-gradient(145deg, #14213a, #0e1728); box-shadow: 0 4px 12px rgb(0 0 0 / 16%); color: #dce7ff; font-size: .76rem; font-weight: 600; text-decoration: none; transition: border-color .18s, background .18s, transform .18s; }
+    .work-mobile-shortcuts a span { color: #91b2ff; font-size: 1rem; }
+    .work-mobile-shortcuts a:only-child { grid-column: 1 / -1; width: calc(50% - .25rem); justify-self: center; }
+    .work-mobile-shortcuts a:active { transform: scale(.98); border-color: #83a9ff; background: #17294a; }
     .work-nav a, .work-nav .work-nav__cta { display: flex; min-height: 2.9rem; align-items: center; padding: 0 .85rem; border: 1px solid transparent; border-radius: .55rem; font-size: .84rem; }
     .work-nav a:hover, .work-nav .work-nav__cta:hover { border-color: rgb(131 169 255 / 22%); background: rgb(79 125 255 / 9%); }
     .work-nav .work-nav__cta { justify-content: space-between; margin-top: .2rem; }
@@ -776,5 +783,48 @@ body::after { animation: orbit 19s linear infinite reverse, electric-fade 4.5s e
 @media (hover: none) and (pointer: coarse) {
     .service-card:hover, .category-card:hover, .management-row:hover, .appointment-row:hover, .review-card:hover { transform: none; }
     .work-button--primary, .button--primary { animation: none; }
+}
+
+/* Calm, consistent motion overrides for the earlier decorative effects */
+@keyframes page-arrive {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+body::before, body::after { animation: none; }
+.work-heading h1, .form-panel h1, .confirm-panel h1, .service-detail__content h1 { animation: none; }
+.service-card {
+    animation: page-arrive .45s cubic-bezier(.2,.7,.2,1) both;
+    rotate: none;
+}
+.service-card:nth-child(2) { animation-delay: .04s; }
+.service-card:nth-child(3) { animation-delay: .08s; }
+.service-card:nth-child(4) { animation-delay: .12s; }
+.service-card:nth-child(5) { animation-delay: .16s; }
+.service-card:nth-child(6) { animation-delay: .2s; }
+.service-card:hover { transform: translateY(-3px); rotate: none; }
+.service-card__image { transition: transform .35s ease; }
+.service-card:hover .service-card__image { transform: scale(1.035); filter: none; }
+.service-card__index, .review-stars, .status-pill--pending { animation: none; }
+.work-button--primary, .button--primary { animation: none; background-position: center; }
+.work-button--primary:hover, .button--primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.work-button:active, .button:active { transform: translateY(0) scale(.99); }
+.work-brand:hover .work-brand__icon, .brand:hover .brand__icon { transform: rotate(-8deg); }
+.work-admin-links a:hover, .account-stats a:hover { transform: translateY(-2px); }
+.review-card:hover, .management-row:hover, .appointment-row:hover, .admin-appointment:hover { transform: translateY(-2px); }
+.work-form__field input:focus, .work-form__field select:focus, .work-form__field textarea:focus { transform: none; }
+.category-card:hover { transform: translateY(-3px); }
+.category-card:hover .category-card__image { transform: scale(1.035); filter: none; }
+.welcome-panel:hover .welcome-mark, .welcome-panel:hover .welcome-quote em { transform: none; }
+.welcome-panel:hover .welcome-quote em { color: #f2f6ff; }
+.welcome-panel:hover .booking-visual { transform: rotate(5deg); }
+.booking-visual { animation: none; }
+.booking-visual__grid i, .welcome-panel__bottom::after { animation: none !important; }
+.auth-card > *, .welcome-panel__copy { animation: page-arrive .45s cubic-bezier(.2,.7,.2,1) both; }
+.auth-card > :nth-child(2) { animation-delay: .04s; }
+.auth-card > :nth-child(3) { animation-delay: .08s; }
+.auth-card > :nth-child(4) { animation-delay: .12s; }
+.auth-card > :nth-child(n + 5) { animation-delay: .16s; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
 
